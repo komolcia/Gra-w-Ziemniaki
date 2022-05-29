@@ -13,6 +13,7 @@ npm install socket.io
 node server.js
 ```
 Na koniec wejść [http://localhost:5000/](http://localhost:5000/)
+
 Program czeka:
 
 ![1](https://user-images.githubusercontent.com/58554458/170892127-4971c724-1a8a-4ffc-8d12-df777052a6fd.png)
