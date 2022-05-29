@@ -8,11 +8,8 @@ jednocześnie kończymy kilka linii to zliczamy punkty z wszystkich).
 Aby zagrać:
 
 npm install
-
 npm install express
-
 npm install socket.io
-
 node server.js
 
 Na koniec wejść [w local](http://localhost:5000/)
