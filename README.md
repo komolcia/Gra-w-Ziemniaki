@@ -6,13 +6,13 @@ po jednym kwadraciku. Osoba, która zamaluje ostatni kwadracik w linii przez ca�
 (pionowo, poziomo lub ukośnie) dostaje tyle punktów ile było kwadracików w danej linii (jeśli
 jednocześnie kończymy kilka linii to zliczamy punkty z wszystkich).
 Aby zagrać:
-
+```
 npm install
 npm install express
 npm install socket.io
 node server.js
-
-Na koniec wejść [w local](http://localhost:5000/)
+```
+Na koniec wejść [http://localhost:5000/](http://localhost:5000/)
 Program czeka:
 
 ![1](https://user-images.githubusercontent.com/58554458/170892127-4971c724-1a8a-4ffc-8d12-df777052a6fd.png)
