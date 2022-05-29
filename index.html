@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type = "text/css">
+            body{
+                 text-align: center;
+                 background-color: rebeccapurple;
+            }
+            .array {
+                margin: auto;
+                width: 750px;
+            }
+            .array button{
+                background-color: plum;
+                height: 100px;
+                width: 100px;
+                margin: 0px;
+                padding: 0px;
+                float: left;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                font-size: 1px;
+                color: white;
+            }
+            #messages{
+                color: white;
+            }
+            #score1{
+                color: white;
+                font-size: 4em;
+
+            }
+            #score2{
+                color: white;
+                font-size: 4em;
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="array">
+            <button id="a0"></button>
+            <button id="a1"></button>
+            <button id="a2"></button>
+            <button id="a3"></button>
+            <button id="a4"></button>
+            <button id="a5"></button>
+            <button id="b0"></button>
+            <button id="b1"></button>
+            <button id="b2"></button>
+            <button id="b3"></button>
+            <button id="b4"></button>
+            <button id="b5"></button>
+            <button id="c0"></button>
+            <button id="c1"></button>
+            <button id="c2"></button>
+            <button id="c3"></button>
+            <button id="c4"></button>
+            <button id="c5"></button>
+            <button id="d0"></button>
+            <button id="d1"></button>
+            <button id="d2"></button>
+            <button id="d3"></button>
+            <button id="d4"></button>
+            <button id="d5"></button>
+            <button id="e0"></button>
+            <button id="e1"></button>
+            <button id="e2"></button>
+            <button id="e3"></button>
+            <button id="e4"></button>
+            <button id="e5"></button>
+            <button id="f0"></button>
+            <button id="f1"></button>
+            <button id="f2"></button>
+            <button id="f3"></button>
+            <button id="f4"></button>
+            <button id="f5"></button>
+        </div>
+        <div id="messages">Czekaj na przeciwnika!</div>
+        <div id="score1">0</div>
+        <div id="score2">0</div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            var socket = io('http://localhost:5000'),
+            myTurn = true, symbol;
+
+        function getarrayState () {
+            var obj = {};
+            $('.array button').each(function () {
+                obj[$(this).attr('id')] = $(this).text() || '';
+            });
+
+            return obj;
+        }
+        
+        function  isGameOver() {
+
+            var state = getarrayState(),
+
+             rows = [
+
+                state.a0,state.a1,state.a2,state.a3,state.a4,state.a5,
+                 state.b0 , state.b1 , state.b2,state.b3 , state.b4 , state.b5,
+                state.c0 , state.c1 , state.c2,state.c3 , state.c4 , state.c5,
+                state.d0 , state.d1 , state.d2,state.d3 , state.d4 , state.d5,
+                state.e0 , state.e1 , state.e2,state.e3 , state.e4 , state.e5,
+                state.f0 , state.f1 , state.f2,state.f3 , state.f4 , state.f5
+
+             ];
+            var j=0;
+            for(var i=0;i<36;i+=6){
+                 if(rows[i]!=''){
+                     j=1;
+                 }
+            }
+            if(j==1){
+                return false;
+
+            }else{
+                return true;
+            }
+
+
+        }       
+        function  addToScore(data) {
+            rows=['a0','a1','a2','a3','a4','a5','b0','b1','b2','b3','b4','b5','c0','c1','c2','c3','c4','c5','d0','d1','d2','d3','d4','d5','e0','e1','e2','e3','e4','e5','f0','f1','f2','f3','f4','f5'];
+            var k=0;
+            for(var i=0;i<36;i++){
+                if(data.position==rows[i]){
+                        k=i;
+                }
+            }
+            var state = getarrayState(),
+
+                row = [
+
+                    state.a0,state.a1,state.a2,state.a3,state.a4,state.a5,
+                    state.b0 , state.b1 , state.b2,state.b3 , state.b4 , state.b5,
+                    state.c0 , state.c1 , state.c2,state.c3 , state.c4 , state.c5,
+                    state.d0 , state.d1 , state.d2,state.d3 , state.d4 , state.d5,
+                    state.e0 , state.e1 , state.e2,state.e3 , state.e4 , state.e5,
+                    state.f0 , state.f1 , state.f2,state.f3 , state.f4 , state.f5
+                ];
+            var j=0;
+            if(0==k || 30==k || 5==k || 35==k){
+                j+=1;
+            }
+            if((0==k && row[1]!='' && row[2]!='' && row[3]!='' && row[4]!='' && row[5]!='') || 
+            (5==k && row[1]!='' && row[2]!='' && row[3]!='' && row[4]!='' && row[0]!='') ||
+            (4==k && row[1]!='' && row[2]!='' && row[3]!='' && row[0]!='' && row[5]!='') ||
+            (3==k && row[1]!='' && row[2]!='' && row[0]!='' && row[4]!='' && row[5]!='') ||
+            (2==k && row[1]!='' && row[0]!='' && row[3]!='' && row[4]!='' && row[5]!='') ||
+            (1==k && row[0]!='' && row[2]!='' && row[3]!='' && row[4]!='' && row[5]!='') ||
+            (6==k && row[7]!='' && row[8]!='' && row[9]!='' && row[10]!='' && row[11]!='') ||
+            (7==k && row[6]!='' && row[8]!='' && row[9]!='' && row[10]!='' && row[11]!='') ||
+            (8==k && row[7]!='' && row[6]!='' && row[9]!='' && row[10]!='' && row[11]!='') ||
+            (9==k && row[7]!='' && row[8]!='' && row[6]!='' && row[10]!='' && row[11]!='') ||
+            (10==k && row[7]!='' && row[8]!='' && row[9]!='' && row[6]!='' && row[11]!='') ||
+            (11==k && row[7]!='' && row[8]!='' && row[9]!='' && row[10]!='' && row[6]!='') ||
+            (12==k && row[13]!='' && row[14]!='' && row[15]!='' && row[16]!='' && row[17]!='') ||
+            (13==k && row[12]!='' && row[14]!='' && row[15]!='' && row[16]!='' && row[17]!='') ||
+            (14==k && row[13]!='' && row[12]!='' && row[15]!='' && row[16]!='' && row[17]!='') ||
+            (15==k && row[13]!='' && row[14]!='' && row[12]!='' && row[16]!='' && row[17]!='') ||
+            (16==k && row[13]!='' && row[14]!='' && row[15]!='' && row[12]!='' && row[17]!='') ||
+            (17==k && row[13]!='' && row[14]!='' && row[15]!='' && row[16]!='' && row[12]!='') ||
+            (18==k && row[19]!='' && row[20]!='' && row[21]!='' && row[22]!='' && row[23]!='') ||
+            (19==k && row[18]!='' && row[20]!='' && row[21]!='' && row[22]!='' && row[23]!='') ||
+            (20==k && row[19]!='' && row[18]!='' && row[21]!='' && row[22]!='' && row[23]!='') ||
+            (21==k && row[19]!='' && row[20]!='' && row[18]!='' && row[22]!='' && row[23]!='') ||
+            (22==k && row[19]!='' && row[20]!='' && row[21]!='' && row[18]!='' && row[23]!='') ||
+            (23==k && row[19]!='' && row[20]!='' && row[21]!='' && row[22]!='' && row[18]!='') ||
+            (24==k && row[25]!='' && row[26]!='' && row[27]!='' && row[28]!='' && row[29]!='') ||
+            (25==k && row[24]!='' && row[26]!='' && row[27]!='' && row[28]!='' && row[29]!='') ||
+            (26==k && row[25]!='' && row[24]!='' && row[27]!='' && row[28]!='' && row[29]!='') ||
+            (27==k && row[25]!='' && row[26]!='' && row[24]!='' && row[28]!='' && row[29]!='') ||
+            (28==k && row[25]!='' && row[26]!='' && row[27]!='' && row[24]!='' && row[29]!='') ||
+            (29==k && row[25]!='' && row[26]!='' && row[27]!='' && row[28]!='' && row[24]!='') ||
+            (30==k && row[31]!='' && row[32]!='' && row[33]!='' && row[34]!='' && row[35]!='') ||
+            (31==k && row[30]!='' && row[32]!='' && row[33]!='' && row[34]!='' && row[35]!='') ||
+            (32==k && row[31]!='' && row[30]!='' && row[33]!='' && row[34]!='' && row[35]!='') ||
+            (33==k && row[31]!='' && row[32]!='' && row[30]!='' && row[34]!='' && row[35]!='') ||
+            (34==k && row[31]!='' && row[32]!='' && row[33]!='' && row[30]!='' && row[35]!='') ||
+            (35==k && row[31]!='' && row[32]!='' && row[33]!='' && row[34]!='' && row[30]!='') 
+            )
+            {
+                j+=6
+            }
+            if((0==k && row[6]!='' && row[12]!='' && row[18]!='' && row[24]!='' && row[30]!='') || 
+            (5==k && row[11]!='' && row[17]!='' && row[23]!='' && row[29]!='' && row[35]!='') ||
+            (4==k && row[10]!='' && row[16]!='' && row[22]!='' && row[28]!='' && row[34]!='') ||
+            (3==k && row[9]!='' && row[15]!='' && row[21]!='' && row[27]!='' && row[33]!='') ||
+            (2==k && row[8]!='' && row[14]!='' && row[20]!='' && row[26]!='' && row[32]!='') ||
+            (1==k && row[7]!='' && row[13]!='' && row[19]!='' && row[25]!='' && row[31]!='') ||
+
+            (6==k && row[0]!='' && row[12]!='' && row[18]!='' && row[24]!='' && row[30]!='') ||
+            (7==k && row[1]!='' && row[13]!='' && row[19]!='' && row[25]!='' && row[31]!='') ||
+            (8==k && row[2]!='' && row[14]!='' && row[20]!='' && row[26]!='' && row[32]!='') ||
+            (9==k && row[3]!='' && row[15]!='' && row[21]!='' && row[27]!='' && row[33]!='') ||
+            (10==k && row[4]!='' && row[16]!='' && row[22]!='' && row[28]!='' && row[34]!='') ||
+            (11==k && row[5]!='' && row[17]!='' && row[23]!='' && row[29]!='' && row[35]!='') ||
+
+            (12==k && row[6]!='' && row[0]!='' && row[18]!='' && row[24]!='' && row[30]!='') ||
+            (13==k && row[7]!='' && row[1]!='' && row[19]!='' && row[25]!='' && row[31]!='') ||
+            (14==k && row[8]!='' && row[2]!='' && row[20]!='' && row[26]!='' && row[32]!='') ||
+            (15==k && row[9]!='' && row[3]!='' && row[21]!='' && row[27]!='' && row[33]!='') ||
+            (16==k && row[10]!='' && row[4]!='' && row[22]!='' && row[28]!='' && row[34]!='') ||
+            (17==k && row[11]!='' && row[5]!='' && row[23]!='' && row[29]!='' && row[35]!='') ||
+
+            (18==k && row[6]!='' && row[12]!='' && row[0]!='' && row[24]!='' && row[30]!='') ||
+            (19==k && row[7]!='' && row[13]!='' && row[1]!='' && row[22]!='' && row[31]!='') ||
+            (20==k && row[8]!='' && row[14]!='' && row[2]!='' && row[26]!='' && row[32]!='') ||
+            (21==k && row[9]!='' && row[15]!='' && row[3]!='' && row[27]!='' && row[33]!='') ||
+            (22==k && row[10]!='' && row[16]!='' && row[4]!='' && row[28]!='' && row[34]!='') ||
+            (23==k && row[11]!='' && row[17]!='' && row[5]!='' && row[29]!='' && row[35]!='') ||
+
+            (24==k && row[6]!='' && row[12]!='' && row[18]!='' && row[0]!='' && row[30]!='') ||
+            (25==k && row[7]!='' && row[13]!='' && row[19]!='' && row[1]!='' && row[31]!='') ||
+            (26==k && row[8]!='' && row[14]!='' && row[20]!='' && row[2]!='' && row[32]!='') ||
+            (27==k && row[9]!='' && row[15]!='' && row[21]!='' && row[3]!='' && row[33]!='') ||
+            (28==k && row[10]!='' && row[16]!='' && row[22]!='' && row[4]!='' && row[34]!='') ||
+            (29==k && row[11]!='' && row[17]!='' && row[23]!='' && row[5]!='' && row[35]!='') ||
+
+            (30==k && row[6]!='' && row[12]!='' && row[18]!='' && row[24]!='' && row[0]!='') ||
+            (31==k && row[7]!='' && row[13]!='' && row[19]!='' && row[25]!='' && row[1]!='') ||
+            (32==k && row[8]!='' && row[14]!='' && row[20]!='' && row[26]!='' && row[2]!='') ||
+            (33==k && row[9]!='' && row[15]!='' && row[21]!='' && row[27]!='' && row[3]!='') ||
+            (34==k && row[10]!='' && row[16]!='' && row[22]!='' && row[28]!='' && row[4]!='') ||
+            (35==k && row[11]!='' && row[17]!='' && row[23]!='' && row[29]!='' && row[5]!='') 
+            )
+            {
+                j+=6
+            }
+            if(
+               ( k==6 && row[1]!='') || ( k==1 && row[6]!='') || ( k==4 && row[11]!='') || ( k==11 && row[4]!='') || 
+               ( k==24 && row[31]!='') || ( k==31 && row[24]!='') || ( k==34 && row[29]!='') || ( k==29 && row[34]!='')
+            ){
+                j+=2;
+            }
+            if((k==2 && row[7]!='' && row[12]!='')|| (k==7 && row[12]!='' && row[2]!='')|| (k==7 && row[2]!='' && row[12]!='')||
+            (k==3 && row[10]!='' && row[17]!='')|| (k==10 && row[3]!='' && row[17]!='')|| (k==17 && row[3]!='' && row[10]!='')||
+            (k==23 && row[33]!='' && row[28]!='')|| (k==28 && row[23]!='' && row[33]!='')|| (k==33 && row[28]!='' && row[22]!='') ||
+            (k==18 && row[25]!='' && row[32]!='')|| (k==32 && row[25]!='' && row[18]!='')|| (k==25 && row[18]!='' && row[32]!='')
+            ){
+                j+=3;
+            }
+            if(
+                (k==18 && row[13]!='' && row[8]!='' && row[3]!='') || (k==13 && row[18]!='' && row[8]!='' && row[3]!='') || 
+                (k==8 && row[13]!='' && row[18]!='' && row[3]!='') || (k==3 && row[13]!='' && row[8]!='' && row[18]!='') ||
+                (k==2 && row[9]!='' && row[16]!='' && row[23]!='') || (k==9 && row[2]!='' && row[16]!='' && row[23]!='') ||
+                (k==16 && row[9]!='' && row[2]!='' && row[23]!='') || (k==23 && row[9]!='' && row[16]!='' && row[2]!='') ||
+                (k==17 && row[22]!='' && row[27]!='' && row[32]!='') || (k==22 && row[17]!='' && row[27]!='' && row[32]!='') ||
+                (k==27 && row[22]!='' && row[17]!='' && row[32]!='') || (k==32 && row[22]!='' && row[27]!='' && row[17]!='') ||
+                (k==33 && row[26]!='' && row[19]!='' && row[12]!='') || (k==26 && row[33]!='' && row[19]!='' && row[12]!='') ||
+                (k==19 && row[26]!='' && row[33]!='' && row[12]!='') || (k==12 && row[26]!='' && row[19]!='' && row[33]!='') 
+
+            ){ 
+                j+=4;
+            }
+            if(
+                (k==4 && row[9]!='' && row[14]!='' && row[19]!='' && row[24]!='') ||
+                (k==9 && row[4]!='' && row[14]!='' && row[19]!='' && row[24]!='') ||
+                (k==14 && row[9]!='' && row[4]!='' && row[19]!='' && row[24]!='') ||
+                (k==19 && row[9]!='' && row[14]!='' && row[4]!='' && row[24]!='') ||
+                (k==24 && row[9]!='' && row[14]!='' && row[19]!='' && row[4]!='') ||
+                (k==11 && row[16]!='' && row[21]!='' && row[26]!='' && row[31]!='') ||
+                (k==16 && row[11]!='' && row[21]!='' && row[26]!='' && row[31]!='') ||
+                (k==21 && row[16]!='' && row[11]!='' && row[26]!='' && row[31]!='') ||
+                (k==26 && row[16]!='' && row[21]!='' && row[11]!='' && row[31]!='') ||
+                (k==31 && row[16]!='' && row[21]!='' && row[26]!='' && row[11]!='') ||
+                (k==1 && row[8]!='' && row[15]!='' && row[22]!='' && row[29]!='') ||
+                (k==8 && row[1]!='' && row[15]!='' && row[22]!='' && row[29]!='') ||
+                (k==15 && row[8]!='' && row[1]!='' && row[22]!='' && row[29]!='') ||
+                (k==22 && row[8]!='' && row[15]!='' && row[1]!='' && row[29]!='') ||
+                (k==29 && row[8]!='' && row[15]!='' && row[22]!='' && row[1]!='') ||
+                (k==6 && row[13]!='' && row[20]!='' && row[27]!='' && row[34]!='') ||
+                (k==13 && row[6]!='' && row[20]!='' && row[27]!='' && row[34]!='') ||
+                (k==20 && row[13]!='' && row[6]!='' && row[27]!='' && row[34]!='') ||
+                (k==27 && row[13]!='' && row[20]!='' && row[6]!='' && row[34]!='') ||
+                (k==34 && row[13]!='' && row[20]!='' && row[27]!='' && row[6]!='') 
+            ){
+                j+=5;
+            }
+            if( 
+            (k==0 && row[7]!='' && row[14]!='' && row[21]!='' && row[28]!='' && row[35]!='') ||
+            (k==7 && row[0]!='' && row[14]!='' && row[21]!='' && row[28]!='' && row[35]!='') ||
+            (k==14 && row[7]!='' && row[0]!='' && row[21]!='' && row[28]!='' && row[35]!='') ||
+            (k==21 && row[7]!='' && row[14]!='' && row[0]!='' && row[28]!='' && row[35]!='') ||
+            (k==28 && row[7]!='' && row[14]!='' && row[21]!='' && row[0]!='' && row[35]!='') ||
+            (k==35 && row[7]!='' && row[14]!='' && row[21]!='' && row[28]!='' && row[0]!='') ||
+            (k==5 && row[10]!='' && row[15]!='' && row[20]!='' && row[25]!='' && row[30]!='') ||
+            (k==10 && row[5]!='' && row[15]!='' && row[20]!='' && row[25]!='' && row[30]!='') ||
+            (k==15 && row[10]!='' && row[5]!='' && row[20]!='' && row[25]!='' && row[30]!='') ||
+            (k==20 && row[10]!='' && row[15]!='' && row[5]!='' && row[25]!='' && row[30]!='') ||
+            (k==25 && row[10]!='' && row[15]!='' && row[20]!='' && row[5]!='' && row[30]!='') ||
+            (k==30 && row[10]!='' && row[15]!='' && row[20]!='' && row[25]!='' && row[5]!='') 
+            ){
+                j+=6;
+            }
+            
+            
+            
+           var a=document.getElementById('score1').innerHTML;
+            var b=document.getElementById('score2').innerHTML;
+          if (!myTurn) {
+            var c=parseInt(a)+j;
+            $('#score1').text(c.toString());
+          
+           }else{
+            var c=parseInt(b)+j;
+            $('#score2').text(c.toString());
+           }
+            
+        }
+
+        function renderTurnMessage () {
+           
+            if (!myTurn) {
+                $('#messages').text('Kolej przeciwnika');
+                $('.array button').attr('disabled', true);
+
+            } else {
+                $('#messages').text('Twoja Kolej.');
+                $('.array button').removeAttr('disabled');
+            }
+        }
+        function makeMove (e) {
+            e.preventDefault();
+           
+            if (!myTurn) {
+                return;
+            }
+
+            if ($(this).text().length) {
+                return;
+            }
+
+            socket.emit('make.move', {
+                symbol: symbol,
+                position: $(this).attr('id'),
+                
+            });
+
+        }
+
+      
+        socket.on('move.made', function (data) {
+            $('#' + data.position).text(data.symbol);
+        
+            if(data.symbol == 'M'){
+            document.getElementById(data.position).style.background='Purple';
+           
+            }
+            else{
+                document.getElementById(data.position).style.background='Pink';
+         
+            }
+            myTurn = (data.symbol !== symbol);
+            
+            if (!isGameOver()) {
+               addToScore(data);
+                renderTurnMessage();
+
+            } else {
+
+                
+                    $('#messages').text('Koniec.');
+
+               
+
+                $('.array button').attr('disabled', true);
+            }
+        });
+
+ 
+        socket.on('game.begin', function (data) {
+
+            symbol = data.symbol;
+            myTurn = (data.symbol === 'M');
+            renderTurnMessage();
+        });
+
+        socket.on('opponent.left', function () {
+            $('#messages').text('Przeciwnik wyszedl.');
+            $('.array button').attr('disabled', true);
+        });
+
+        $(function () {
+            $('.array button').attr('disabled', true);
+            $('.array > button').on('click', makeMove);
+        });
+        </script>
+    </body>
+</html>
