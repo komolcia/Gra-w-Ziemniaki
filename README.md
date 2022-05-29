@@ -1,5 +1,6 @@
 # Gra-w-Ziemniaki
-Gra z katalogu marzeń
+Gra z katalogu marzeń   https://katalogmarzen.pl/upload/gry-od-katalogu-marzen.pdf
+
 Plansza składa się z 36 kwadracików. Każdy z graczy posiada swój kolor. Gra polega na
 zamalowywaniu kolejnych kwadracików swoim kolorem; gracze naprzemiennie zamalowują
 po jednym kwadraciku. Osoba, która zamaluje ostatni kwadracik w linii przez całą planszą
